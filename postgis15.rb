@@ -8,6 +8,7 @@ class Postgis15 < Formula
   keg_only "Conflicts with postgis in main repository."
 
   option 'with-gui', 'Build sh2pgsql-gui in addition to CLI tools'
+  option 'with-comments', 'Build postgis_comments.sql'
 
   depends_on 'postgresql9'
   depends_on 'proj'
@@ -32,6 +33,10 @@ class Postgis15 < Formula
 
     system './configure', *args
     system 'make'
+
+    if build.with? 'comments'
+      system 'make comments'
+    end
 
     # __DON'T RUN MAKE INSTALL!__
     #
@@ -81,6 +86,7 @@ class Postgis15 < Formula
       postgis/postgis.sql
       postgis/uninstall_postgis.sql
     ]
+    postgis_sql.install 'doc/postgis_comments.sql' if build.with? 'comments'
   end
 
   def caveats;
